@@ -1,6 +1,6 @@
 <?php
 // D:\Xampp\htdocs\FP\index.php (Final Merged File)
-session_start();
+session_start()
 
 // --- 1. Session Check (Using $_SESSION['username'] for consistency with the requested configuration)
 if (!isset($_SESSION['username'])) {
