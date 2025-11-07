@@ -32,6 +32,7 @@ include 'get_stats.php';
   </style>
 </head>
 <body>
+  <h1>Heplya </h1>
   <div class="min-h-screen flex flex-col md:flex-row">
     <div class="flex-1 flex flex-col justify-center items-center bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-10">
       <div class="flex items-center space-x-4 mb-10">
