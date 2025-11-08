@@ -22,6 +22,8 @@ include 'get_stats.php';
   <style>
       .input-group { position: relative; }
       .input-field { width: 100%; padding: 10px 10px 10px 0; font-size: 16px; border: none; border-bottom: 2px solid #ccc; outline: none; transition: border-bottom-color 0.3s; background-color: transparent; }
+      /* ADDED: Specific padding for the password field to make room for the icon */
+      .input-field.pr-10 { padding-right: 40px; } 
       .input-field:focus { border-bottom-color: #3b82f6; }
       .input-label { position: absolute; top: 10px; left: 0; font-size: 16px; color: #999; pointer-events: none; transition: 0.3s ease all; }
       .input-field:focus ~ .input-label, .input-field:not(:placeholder-shown) ~ .input-label { top: -14px; font-size: 12px; color: #3b82f6; }
@@ -74,11 +76,19 @@ include 'get_stats.php';
             <label for="identifier" class="input-label">Username or Email</label>
           </div>
 
-          <div class="input-group">
-            <input type="password" id="password" name="password" required class="input-field peer" placeholder=" " />
+          <div class="input-group relative">
+            <input type="password" id="password" name="password" required class="input-field peer pr-10" placeholder=" " />
             <label for="password" class="input-label">Password</label>
+            <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none" style="top: 50%; transform: translateY(-50%);">
+                <svg id="eye-icon-open" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <svg id="eye-icon-closed" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 1.14 0 2.222.25 3.228.718M21 12c-1.274 4.057-5.064 7-9.542 7-1.14 0-2.222-.25-3.228-.718m8.056-8.056l-9.9 9.9M21 21l-9.9-9.9" />
+                </svg>
+            </button>
           </div>
-
           <button type="submit" class="btn-primary">Login</button>
         </form>
 
@@ -96,6 +106,27 @@ include 'get_stats.php';
   </div>
 
   <script>
+    // --- Password Toggle Functionality ---
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password'); // Corrected ID: password
+    const openEye = document.getElementById('eye-icon-open');
+    const closedEye = document.getElementById('eye-icon-closed');
+
+    togglePassword.addEventListener('click', function (e) {
+        e.preventDefault(); 
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        if (type === 'text') {
+            openEye.style.display = 'block';
+            closedEye.style.display = 'none';
+        } else {
+            openEye.style.display = 'none';
+            closedEye.style.display = 'block';
+        }
+    });
+    // --- End Password Toggle Functionality ---
+    
     document.getElementById("loginForm").addEventListener("submit", async function(e) {
       e.preventDefault(); 
       const identifier = document.getElementById("identifier").value; 
@@ -114,14 +145,16 @@ include 'get_stats.php';
 
         const result = await response.json(); // Wait for the JSON response
 
-        if (response.ok) {
+        if (response.ok && result.success) { // Check for success flag
           window.location.href = "/FP/index.php"; 
         } else {
           // Display the specific error message from the API
-          messageElement.textContent = result.error || "Login failed due to an unknown error.";
+          messageElement.textContent = result.error || "Login failed. Invalid credentials.";
+          messageElement.style.color = "red";
         }
       } catch (networkError) {
         messageElement.textContent = "NETWORK ERROR: Could not connect to the server. Check XAMPP status.";
+        messageElement.style.color = "red";
       }
     });
   </script>
