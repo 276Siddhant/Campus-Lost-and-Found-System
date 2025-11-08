@@ -1,5 +1,5 @@
 <?php
-// api.php - Backend API Handler (FINAL VERSION)
+// api.php - Backend API Handler (FINAL VERSION WITH FORGOT_PASSWORD)
 session_start();
 header('Content-Type: application/json');
 
@@ -38,7 +38,7 @@ function get_post_data() {
 $action = $_GET['action'] ?? null; 
 
 // Define actions that do NOT require a user session (public access)
-$public_actions = ['login', 'signup', 'logout', 'get_all_items', 'get_item_details'];
+$public_actions = ['login', 'signup', 'logout', 'get_all_items', 'get_item_details', 'forgot_password']; // ADDED 'forgot_password'
 
 // Check if user is logged in OR if the action is public
 if (!isset($_SESSION['username']) && !in_array($action, $public_actions)) {
@@ -137,6 +137,61 @@ switch ($action) {
             exit_with_error('Database error during login.', 500);
         }
         break;
+        
+    // =========================================================================
+    // ACTION 0.3: FORGOT PASSWORD (PUBLIC ACCESS) - NEW ACTION
+    // =========================================================================
+    case 'forgot_password':
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { exit_with_error('Invalid request method.', 405); }
+
+        $data = get_post_data();
+        $email = $data['email'] ?? '';
+
+        // Pre-validate email format before proceeding
+        if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            // Return generic success for security, even if the input is malformed
+            echo json_encode(['success' => true, 'message' => 'If this email is registered, a password reset link has been sent.']);
+            exit(); 
+        }
+
+        try {
+            // 1. Check if user exists
+            $user_sql = "SELECT id, username FROM users WHERE email = ?";
+            $user_stmt = $pdo->prepare($user_sql);
+            $user_stmt->execute([$email]);
+            $user = $user_stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($user) {
+                // 2. Generate cryptographically secure token and expiry time (30 minutes)
+                // Requires PHP 7.0+ for random_bytes
+                $token = bin2hex(random_bytes(32)); 
+                $expiry_time = date("Y-m-d H:i:s", time() + 1800); 
+
+                // 3. Store token and expiry in the database
+                $update_sql = "UPDATE users SET reset_token = ?, token_expiry = ? WHERE id = ?";
+                $update_stmt = $pdo->prepare($update_sql);
+                $update_stmt->execute([$token, $expiry_time, $user['id']]);
+                
+                // 4. *** SIMULATION ONLY: Log the link to the server error log ***
+                // In a real application, you MUST replace this with actual email sending logic (e.g., PHPMailer).
+                $reset_link = "http://localhost/FP/reset.php?token=" . $token; 
+                error_log("PASSWORD RESET LINK for " . $email . ": " . $reset_link);
+                // END SIMULATION
+            }
+
+            // 5. Always return a generic success message for security, regardless of whether the email was found.
+            echo json_encode(['success' => true, 'message' => 'If this email is registered, a password reset link has been sent.']);
+
+        } catch (PDOException $e) {
+            error_log("Forgot Password DB Error: " . $e->getMessage());
+            // Return generic success even on DB error for security
+            echo json_encode(['success' => true, 'message' => 'If this email is registered, a password reset link has been sent.']);
+        } catch (Exception $e) {
+             error_log("Token Generation Error: " . $e->getMessage());
+             echo json_encode(['success' => true, 'message' => 'If this email is registered, a password reset link has been sent.']);
+        }
+        break;
+
 
     // =========================================================================
     // ACTION 1: REPORT LOST/FOUND ITEM (POST) - WITH NOTIFICATION LOGIC

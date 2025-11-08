@@ -318,7 +318,8 @@ switch ($action) {
                 echo json_encode($item); 
             } else { exit_with_error('Item not found.', 404); } 
 
-        } catch (PDOException $e) {
+        } catch (PDOException $e) 
+        {
             error_log("Item Detail Fetch Error: " . $e->getMessage());
             exit_with_error('Database error fetching item details.', 500);
         }

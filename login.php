@@ -92,8 +92,12 @@ include 'get_stats.php';
           <button type="submit" class="btn-primary">Login</button>
         </form>
 
-        <p id="loginMessage"></p> <div class="mt-4 text-center">
+        <p id="loginMessage"></p> 
+        <div class="mt-4 text-center">
           <p class="text-sm">
+            <a href="forgot_password.php" class="text-blue-600 hover:underline font-medium">Forgot Password?</a>
+          </p>
+          <p class="text-sm mt-2">
             Don’t have an account?
             <a href="signup.php" class="text-blue-600 hover:underline">Sign up</a>
           </p>
@@ -135,20 +139,17 @@ include 'get_stats.php';
       messageElement.textContent = "";
 
       try {
-        // *** CRITICAL FIX: Changed URL to pass action as a query parameter ***
         const response = await fetch('/FP/api.php?action=login', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          // Passed 'identifier' instead of 'username' to match front-end input name
           body: JSON.stringify({ identifier: identifier, password: password }) 
         });
 
-        const result = await response.json(); // Wait for the JSON response
+        const result = await response.json(); 
 
-        if (response.ok && result.success) { // Check for success flag
+        if (response.ok && result.success) { 
           window.location.href = "/FP/index.php"; 
         } else {
-          // Display the specific error message from the API
           messageElement.textContent = result.error || "Login failed. Invalid credentials.";
           messageElement.style.color = "red";
         }
