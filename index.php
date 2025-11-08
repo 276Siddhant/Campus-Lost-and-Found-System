@@ -43,7 +43,7 @@ try {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="icon" type="image/png" href="../Frontend/L&F.png">
+<link rel="icon" type="image/jpg" href="static/images/L&F.jpg">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Campus Lost & Found</title>
