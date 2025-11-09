@@ -1,24 +1,27 @@
 # Use official PHP + Apache image
 FROM php:8.2-apache
 
-# Copy all project files into Apache web root
-COPY . /var/www/html/
+# Set working directory to Apache web root
+WORKDIR /var/www/html
 
-# Ensure permissions are correct
-RUN chmod -R 755 /var/www/html/
+# Copy everything from the repository into the container
+COPY ./ ./
 
-# Install PHP extensions your app might need
+# Set correct permissions
+RUN chmod -R 755 /var/www/html
+
+# Install PHP extensions (for MySQL etc.)
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Make Apache use home.php as the default page before index.php
+# Make Apache serve home.php first if available
 RUN echo "DirectoryIndex home.php index.php index.html" > /etc/apache2/conf-enabled/directoryindex.conf
 
-# Use Render's assigned port (default 8080)
+# Tell Apache to listen on Render’s dynamic port
 ENV PORT=8080
 RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
 
 # Expose that port
 EXPOSE 8080
 
-# Start Apache
+# Start Apache in foreground
 CMD ["apache2ctl", "-D", "FOREGROUND"]
