@@ -14,5 +14,7 @@ RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available
 # Expose the dynamic port for Render
 EXPOSE 8080
 
+RUN echo "DirectoryIndex home.php index.php index.html" > /etc/apache2/conf-enabled/directoryindex.conf
+
 # Start Apache in foreground (keeps container alive)
 CMD ["apache2ctl", "-D", "FOREGROUND"]
