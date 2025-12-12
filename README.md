@@ -1,94 +1,109 @@
-# 📦 Campus Lost & Found Management System
+# 📦 Campus Lost & Found System
 
-A full-stack web application designed to help students and campus
-communities **report, track, and recover** lost and found items. The
-system provides separate interfaces for users and admins, enabling
-efficient item management, verification, and resolution.
+A web-based application that helps students and staff **report lost
+items**, **upload found items**, and **manage retrievals** easily within
+a college campus. The system provides authentication, item management,
+an admin dashboard, and automated status handling.
 
 ## 🚀 Features
 
-### 👤 **User Features**
+### 🔐 User Features
 
--   User **signup, login, and password reset**\
--   Post **Lost** or **Found** items with details (title, description,
-    category, location, date)\
--   View and manage your submitted reports\
--   Receive status updates when items are reviewed or resolved\
--   Search and browse all lost & found items
+-   User signup & login system
+-   Upload images of lost/found items
+-   Search for items by keywords
+-   View item details
+-   Reset forgotten passwords
+-   Responsive UI
 
-### 🛠️ **Admin Features**
+### 🛠 Admin Features
 
--   Admin dashboard for **managing users and item reports**\
--   Approve, update, or mark items as **resolved/claimed**\
--   Ability to remove inappropriate or duplicate posts\
--   Monitor platform statistics (total users, active reports, resolved
-    cases)
+-   Manage all item reports
+-   View system statistics
+-   Moderate uploaded content
+-   Update item status
 
-## 📊 Home Page Insights
+### 📡 Technical Features
 
-Displays summarized platform data: - Total registered users\
-- Active lost item reports\
-- Active found item reports\
-- Successfully resolved cases
+-   PHP backend
+-   MySQL database
+-   Secure password hashing
+-   API endpoints for async operations
+-   Image uploads stored server-side
 
 ## 🧰 Tech Stack
 
-  Layer                    Technology
-  ------------------------ ---------------------
-  **Frontend**             HTML, CSS
-  **Backend**              PHP
-  **Database**             MySQL / SQL
-  **Deployment Support**   Dockerfile included
+-   Frontend: HTML, CSS, JavaScript
+-   Backend: PHP
+-   Database: MySQL
+-   Server: XAMPP / Apache
+-   Version Control: Git + GitHub
 
-## 🗄️ Project Structure
+## 📁 Project Structure
 
-    /Campus-Lost-and-Found-System
-    │── admin/           # Admin dashboard & functionalities
-    │── controllers/      # Backend logic (login, reset password, etc.)
-    │── models/           # Database-related code
-    │── views/            # Frontend UI pages
-    │── public/           # CSS, assets, and static content
-    │── database/         # SQL schema & connection files
-    │── Dockerfile        # Optional Docker setup
-    │── README.md         # Project documentation
+    📁 Campus-Lost-and-Found-System
+    │
+    ├── 📁 sql
+    │   └── lost_and_found_db.sql
+    │
+    ├── 📁 static
+    │   ├── 📁 css
+    │   └── 📁 images
+    │
+    ├── 📁 uploads
+    │
+    ├── admin.php
+    ├── api.php
+    ├── CNAME
+    ├── db_connect.php
+    ├── forgot_password.php
+    ├── get_stats.php
+    ├── home.php
+    ├── index.php
+    ├── login.php
+    ├── README.md
+    ├── reset.php
+    ├── signup.php
+    └── test.php
 
-## 🔧 Installation & Setup
+## 🗄️ Database Setup
 
-### 1️⃣ Clone the Repository
+1.  Open phpMyAdmin\
 
-git clone
-https://github.com/276Siddhant/Campus-Lost-and-Found-System.git
+2.  Create a database (e.g., `lost_and_found`)
 
-### 2️⃣ Setup Database
+3.  Import SQL file:
 
--   Create a MySQL database\
--   Import the provided `.sql` file from the project's `/database`
-    folder\
--   Update database credentials in:
+        sql/lost_and_found_db.sql
 
-```{=html}
-<!-- -->
+4.  Update database config in `db_connect.php`.
+
+## ⚙️ How to Run the Project Locally
+
+``` sh
+git clone https://github.com/your-username/Campus-Lost-and-Found-System.git
 ```
-    /models/config.php
 
-### 3️⃣ Run the Project
+Move the project into XAMPP `htdocs/`, start Apache & MySQL, then open:
 
--   Start Apache & MySQL (XAMPP / WAMP / LAMP)\
--   Place the project folder in:
-    -   `htdocs/` for XAMPP\
-    -   `www/` for WAMP\
--   Visit in browser:\
     http://localhost/Campus-Lost-and-Found-System/
 
-## 🧪 Future Improvements
+## 🔌 API Endpoints
 
--   Add image upload support\
--   Email notification system\
--   Advanced search filters\
--   Improved UI/UX\
--   REST API version
+  Endpoint                     Method   Description
+  ---------------------------- -------- -------------
+  api.php?action=add_item      POST     Add item
+  api.php?action=get_items     GET      Fetch items
+  api.php?action=delete_item   POST     Delete item
+  get_stats.php                GET      Stats
 
-## 🧑‍💻 Author
+## 🤝 Contributing
 
-**Siddhant Vedpathak**\
-GitHub: https://github.com/276Siddhant
+1.  Fork\
+2.  Create branch\
+3.  Commit\
+4.  PR
+
+## 📝 License
+
+MIT License.
